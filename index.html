@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程作业截止时间</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#69b1ff',
+                        accent: '#36D399',
+                        danger: '#F87272',
+                        warning: '#FBBD23',
+                        dark: '#1E293B',
+                        'dark-light': '#334155',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+            }
+            .glass-effect-dark {
+                background: rgba(30, 41, 59, 0.7);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            .deadline-pulse {
+                animation: pulse-slow 3s infinite;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-dark min-h-screen text-gray-100 font-inter">
+    <!-- 顶部导航栏 -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-effect-dark">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-calendar-check-o text-primary text-2xl"></i>
+                <h1 class="text-xl font-bold">作业截止时间追踪</h1>
+            </div>
+            <div id="current-time" class="text-lg font-mono"></div>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <main class="container mx-auto pt-24 pb-16 px-4">
+        <!-- 保持冷静提示 -->
+        <div class="relative mb-8 overflow-hidden rounded-lg bg-primary/10 border border-primary/30 p-4 animate-fade-in">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full -mr-16 -mt-16"></div>
+            <div class="absolute bottom-0 left-0 w-24 h-24 bg-primary/20 rounded-full -ml-12 -mb-12"></div>
+            <h2 class="text-center text-xl md:text-2xl font-bold text-white relative z-10">
+                <i class="fa fa-heartbeat text-danger mr-2"></i>
+                保持冷静，按时完成
+                <i class="fa fa-heartbeat text-danger ml-2"></i>
+            </h2>
+        </div>
+
+        <!-- 课程列表 -->
+        <div class="space-y-8">
+            <!-- BGL Industry Project PG 课程 -->
+            <div class="glass-effect p-6 rounded-xl border border-secondary/30 card-hover animate-slide-up" style="animation-delay: 0.1s">
+                <h2 class="text-xl font-bold text-secondary mb-6 flex items-center">
+                    <i class="fa fa-cogs mr-2 text-primary"></i>
+                    BGL Industry Project PG
+                </h2>
+                
+                <!-- 作业列表 -->
+                <div class="space-y-4">
+                    <!-- 作业1 - 小组作业 -->
+                    <div class="glass-effect p-4 rounded-xl border border-secondary/30 card-hover deadline-pulse">
+                        <div class="flex justify-between">
+                            <h3 class="font-bold text-secondary text-lg">Industry Project Report</h3>
+                            <span class="bg-secondary/20 text-secondary px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fa fa-users mr-1"></i> 小组作业
+                            </span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <div class="text-accent flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i> 2025-06-28 21:55
+                            </div>
+                            <span class="deadline-counter bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">
+                                剩余 <span id="bgl-countdown1">--</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- 作业2 - 小组作业 -->
+                    <div class="glass-effect p-4 rounded-xl border border-secondary/30 card-hover">
+                        <div class="flex justify-between">
+                            <h3 class="font-bold text-secondary text-lg">Industry Project Presentation</h3>
+                            <span class="bg-secondary/20 text-secondary px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fa fa-users mr-1"></i> 小组作业
+                            </span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <div class="text-accent flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i> 2025-06-28 21:59
+                            </div>
+                            <span class="deadline-counter bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">
+                                剩余 <span id="bgl-countdown2">--</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- 作业3 -->
+                    <div class="glass-effect p-4 rounded-xl border border-secondary/30 card-hover">
+                        <div class="flex justify-between">
+                            <h3 class="font-bold text-secondary text-lg">Reflective Analysis</h3>
+                            <span class="bg-secondary/20 text-secondary px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fa fa-file-text-o mr-1"></i> 个人作业
+                            </span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <div class="text-accent flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i> 2025-07-05 21:55
+                            </div>
+                            <span class="deadline-counter bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">
+                                剩余 <span id="bgl-countdown3">--</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entrepreneurship PG 课程 -->
+            <div class="glass-effect p-6 rounded-xl border border-secondary/30 card-hover animate-slide-up" style="animation-delay: 0.2s">
+                <h2 class="text-xl font-bold text-secondary mb-6 flex items-center">
+                    <i class="fa fa-line-chart mr-2 text-primary"></i>
+                    Entrepreneurship PG
+                </h2>
+                
+                <!-- 作业列表 -->
+                <div class="space-y-4">
+                    <!-- 作业1 - 小组作业 -->
+                    <div class="glass-effect p-4 rounded-xl border border-secondary/30 card-hover deadline-pulse">
+                        <div class="flex justify-between">
+                            <h3 class="font-bold text-secondary text-lg">Micro-Finance Challenge Report</h3>
+                            <span class="bg-secondary/20 text-secondary px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fa fa-users mr-1"></i> 小组作业
+                            </span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <div class="text-accent flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i> 2025-06-01 21:55
+                            </div>
+                            <span class="deadline-counter bg-red-500/20 text-red-400 px-2 py-1 rounded text-xs font-bold">
+                                仅剩 <span id="ent-countdown1">--</span>
+                            </span>
+                        </div>
+                        <div class="mt-2 text-xs text-gray-400 bg-dark/30 p-2 rounded flex items-center">
+                            <i class="fa fa-info-circle mr-1"></i> 开放时间：2025-05-29 22:30
+                        </div>
+                    </div>
+
+                    <!-- 作业2 -->
+                    <div class="glass-effect p-4 rounded-xl border border-secondary/30 card-hover">
+                        <div class="flex justify-between">
+                            <h3 class="font-bold text-secondary text-lg">Business Investment Pitch</h3>
+                            <span class="bg-secondary/20 text-secondary px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fa fa-file-text-o mr-1"></i> 个人作业
+                            </span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <div class="text-accent flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i> 2025-06-15 21:55
+                            </div>
+                            <span class="deadline-counter bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">
+                                剩余 <span id="sic-countdown4">--</span>
+                            </span>
+                        </div>
+                        <div class="mt-2 text-xs text-gray-400 bg-dark/30 p-2 rounded flex items-center">
+                            <i class="fa fa-info-circle mr-1"></i> 开放时间：2025-06-11 22:00
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy, Innovation and Change PG 课程 -->
+            <div class="glass-effect p-6 rounded-xl border border-secondary/30 card-hover animate-slide-up" style="animation-delay: 0.3s">
+                <h2 class="text-xl font-bold text-secondary mb-6 flex items-center">
+                    <i class="fa fa-lightbulb-o mr-2 text-primary"></i>
+                    Strategy, Innovation and Change PG
+                </h2>
+                
+                <!-- 作业列表 -->
+                <div class="space-y-4">
+                    <!-- 作业1 -->
+                    <div class="glass-effect p-4 rounded-xl border border-secondary/30 card-hover">
+                        <div class="flex justify-between">
+                            <h3 class="font-bold text-secondary text-lg">Individual Engagement & Presentations</h3>
+                            <span class="bg-secondary/20 text-secondary px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fa fa-file-text-o mr-1"></i> 个人作业
+                            </span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <div class="text-accent flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i> 2025-06-07 21:59
+                            </div>
+                            <span class="deadline-counter bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">
+                                剩余 <span id="sic-countdown1">--</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- 作业2 - 小组作业 -->
+                    <div class="glass-effect p-4 rounded-xl border border-secondary/30 card-hover">
+                        <div class="flex justify-between">
+                            <h3 class="font-bold text-secondary text-lg">Group Project & Written Presentation</h3>
+                            <span class="bg-secondary/20 text-secondary px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fa fa-users mr-1"></i> 小组作业
+                            </span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <div class="text-accent flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i> 2025-06-07 21:59
+                            </div>
+                            <span class="deadline-counter bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">
+                                剩余 <span id="sic-countdown2">--</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- 作业3 -->
+                    <div class="glass-effect p-4 rounded-xl border border-secondary/30 card-hover">
+                        <div class="flex justify-between">
+                            <h3 class="font-bold text-secondary text-lg">Essay</h3>
+                            <span class="bg-secondary/20 text-secondary px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fa fa-file-text-o mr-1"></i> 个人作业
+                            </span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <div class="text-accent flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i> 2025-06-30 21:59
+                            </div>
+                            <span class="deadline-counter bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">
+                                剩余 <span id="sic-countdown3">--</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="fixed bottom-0 left-0 right-0 glass-effect-dark py-2">
+        <div class="container mx-auto px-4 text-center text-sm text-gray-400">
+            <p>最后更新：<span id="last-updated">--</span></p>
+        </div>
+    </footer>
+
+    <!-- 倒计时和时间脚本 -->
+    <script>
+        // 当前时间显示
+        function updateCurrentTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('current-time').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        
+        // 每秒更新当前时间
+        setInterval(updateCurrentTime, 1000);
+        updateCurrentTime();
+
+        // 计算倒计时函数（精确到小时）
+        function updateCountdown() {
+            const now = new Date();
+            
+            // 各作业截止时间（UTC+8）
+            const deadlines = {
+                bgl1: new Date('2025-06-28T21:55:00+08:00'),
+                bgl2: new Date('2025-06-28T21:59:00+08:00'),
+                bgl3: new Date('2025-07-05T21:55:00+08:00'),
+                ent1: new Date('2025-06-01T21:55:00+08:00'),
+                sic4: new Date('2025-06-15T21:55:00+08:00'),
+                sic1: new Date('2025-06-07T21:59:00+08:00'),
+                sic2: new Date('2025-06-07T21:59:00+08:00'),
+                sic3: new Date('2025-06-30T21:59:00+08:00'),
+            };
+            
+            // 更新所有倒计时
+            for (const [key, deadline] of Object.entries(deadlines)) {
+                const diff = deadline - now;
+                const elementId = key ==='ent1'? key.replace('ent', 'ent-countdown') : key.replace('bgl', 'bgl-countdown').replace('sic', 'sic-countdown');
+                
+                const countdownElement = document.getElementById(elementId);
+                if (countdownElement) {
+                    if (diff <= 0) {
+                        countdownElement.textContent = "已截止";
+                        countdownElement.parentElement.classList.add('bg-red-600');
+                        countdownElement.parentElement.classList.remove('bg-green-500/20', 'bg-red-500/20');
+                    } else {
+                        // 计算剩余天数和小时数
+                        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        
+                        // 格式化显示
+                        let timeString = '';
+                        if (days > 0) {
+                            timeString = `${days}天${hours}小时`;
+                        } else {
+                            timeString = `${hours}小时`;
+                        }
+                        
+                        countdownElement.textContent = timeString;
+                        
+                        // 样式更新
+                        if (days < 7) {
+                            countdownElement.parentElement.classList.add('bg-red-500/20', 'text-red-400');
+                            countdownElement.parentElement.classList.remove('bg-green-500/20', 'text-green-400');
+                        } else {
+                            countdownElement.parentElement.classList.add('bg-green-500/20', 'text-green-400');
+                            countdownElement.parentElement.classList.remove('bg-red-500/20', 'text-red-400');
+                        }
+                    }
+                }
+            }
+            
+            // 更新最后更新时间
+            document.getElementById('last-updated').textContent = new Date().toLocaleString();
+        }
+        
+        // 初始化倒计时
+        updateCountdown();
+        
+        // 每1分钟更新一次倒计时（提高实时性）
+        setInterval(updateCountdown, 60 * 1000);
+    </script>
+</body>
+</html>
